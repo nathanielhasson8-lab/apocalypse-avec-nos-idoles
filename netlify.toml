@@ -1,0 +1,41 @@
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "https://apocalypse-avec-nos-idoles.netlify.app/*"
+  to = "https://apocalypse-avec-nos-idoles.watch/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://apocalypse-avec-nos-idoles.netlify.app/*"
+  to = "https://apocalypse-avec-nos-idoles.watch/:splat"
+  status = 301
+  force = true
+
+[[headers]]
+  for = "/assets/*"
+
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.webp"
+
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/og.png"
+
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/*"
+
+  [headers.values]
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
