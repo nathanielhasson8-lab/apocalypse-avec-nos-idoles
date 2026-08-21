@@ -89017,7 +89017,7 @@ Shido ne répond pas.
 
 Jonas pointe Rosa.
 
-— C’EST TAYLOR SWIFT ?
+— C’EST QUOI ÇA ?
 
 Shido se redresse légèrement.
 
