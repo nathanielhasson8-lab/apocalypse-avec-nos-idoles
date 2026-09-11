@@ -23,23 +23,26 @@ jobs:
           gradle-version: '8.9'
       - name: Install SDK 35
         run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
-      - name: Reconstruct exact game HTML
+      - name: Prepare placeholder asset
         run: |
           mkdir -p app/src/main/assets
-          cat game_parts/part*.b64 | base64 -d > /tmp/index.html.xz
-          xz -dc /tmp/index.html.xz > app/src/main/assets/index.html
-          echo "50e09582b828f7c69b3f0f074dd87f2aa02172590111e430140b99e2e93b3d22  app/src/main/assets/index.html" | sha256sum -c -
-      - name: Build APK
+          printf '%s\n' '<!doctype html><html><body>Manager 27</body></html>' > app/src/main/assets/index.html
+      - name: Build wrapper APK
         run: gradle :app:assembleDebug --no-daemon --stacktrace
-      - name: Prepare artifact
-        run: cp app/build/outputs/apk/debug/app-debug.apk Manager27_MSN.apk
-      - name: Verify APK
+      - name: Prepare signing kit
         run: |
-          test -s Manager27_MSN.apk
-          unzip -l Manager27_MSN.apk | grep -q 'assets/index.html'
-          test "$(unzip -p Manager27_MSN.apk assets/index.html | sha256sum | cut -d' ' -f1)" = "50e09582b828f7c69b3f0f074dd87f2aa02172590111e430140b99e2e93b3d22"
+          mkdir -p export
+          cp app/build/outputs/apk/debug/app-debug.apk export/Manager27_wrapper.apk
+          cp "$ANDROID_HOME/build-tools/35.0.0/lib/apksigner.jar" export/apksigner.jar
+          cp "$ANDROID_HOME/build-tools/35.0.0/zipalign" export/zipalign
+          chmod +x export/zipalign
+          keytool -genkeypair -noprompt -keystore export/manager27.keystore -storepass manager27 -keypass manager27 -alias manager27 -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Manager 27, O=Manager27, C=FR"
+          test -s export/Manager27_wrapper.apk
+          test -s export/apksigner.jar
+          test -x export/zipalign
+          test -s export/manager27.keystore
       - uses: actions/upload-artifact@v4
         with:
-          name: Manager27_MSN
-          path: manager27-apk/Manager27_MSN.apk
+          name: Manager27_BuildKit
+          path: manager27-apk/export/
           if-no-files-found: error
