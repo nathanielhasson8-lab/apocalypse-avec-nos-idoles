@@ -1,0 +1,66 @@
+name: Build Manager 27 Flatpak
+
+on:
+  push:
+    branches: [manager27-flatpak-build]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Flatpak tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y flatpak flatpak-builder xvfb dbus-x11
+          flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+      - name: Reconstruct and verify exact game HTML
+        run: |
+          cat flatpak/html-pairs/p*.b64 | base64 -d | gzip -d > flatpak/index.html
+          echo "50e09582b828f7c69b3f0f074dd87f2aa02172590111e430140b99e2e93b3d22  flatpak/index.html" | sha256sum -c -
+          test "$(wc -c < flatpak/index.html)" -eq 347438
+          grep -q "Manager 27" flatpak/index.html
+          grep -q "CONTINUER" flatpak/index.html
+
+      - name: Install GNOME runtime and SDK
+        run: |
+          flatpak install --user -y flathub org.gnome.Platform//48 org.gnome.Sdk//48
+
+      - name: Build Flatpak
+        run: |
+          flatpak-builder --force-clean --user --repo=flatpak/repo flatpak/build flatpak/com.manager27.MSN.yml
+          flatpak build-bundle flatpak/repo Manager27_MSN.flatpak com.manager27.MSN
+          test -s Manager27_MSN.flatpak
+          sha256sum Manager27_MSN.flatpak
+
+      - name: Install built bundle
+        run: |
+          flatpak install --user -y ./Manager27_MSN.flatpak
+          flatpak run --command=sh com.manager27.MSN -c 'test -x /app/bin/manager27 && test -s /app/share/manager27/index.html && echo "50e09582b828f7c69b3f0f074dd87f2aa02172590111e430140b99e2e93b3d22  /app/share/manager27/index.html" | sha256sum -c -'
+
+      - name: Launch smoke test
+        run: |
+          set +e
+          timeout 15s dbus-run-session -- xvfb-run -a flatpak run com.manager27.MSN >flatpak-smoke.log 2>&1
+          code=$?
+          set -e
+          cat flatpak-smoke.log
+          if [ "$code" -ne 124 ]; then
+            echo "Manager 27 exited unexpectedly during smoke test with code $code"
+            exit 1
+          fi
+          if grep -Eqi 'segmentation fault|core dumped|fatal error|WebKitWebProcess.*crash' flatpak-smoke.log; then
+            echo "Crash signature detected"
+            exit 1
+          fi
+
+      - name: Upload Flatpak bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: Manager27_MSN_Flatpak
+          path: Manager27_MSN.flatpak
+          if-no-files-found: error
