@@ -26,8 +26,12 @@ jobs:
             flatpak/html-pairs/p02.b64 \
             flatpak/html-pairs/p03.b64 \
             flatpak/html-pairs/p04.b64 \
-            flatpak/html-pairs/p05a.b64 \
-            flatpak/html-pairs/p05b.b64 \
+            flatpak/html-pairs/p05m0.b64 \
+            flatpak/html-pairs/p05m1.b64 \
+            flatpak/html-pairs/p05m2.b64 \
+            flatpak/html-pairs/p05m3.b64 \
+            flatpak/html-pairs/p05m4.b64 \
+            flatpak/html-pairs/p05m5.b64 \
             flatpak/html-pairs/p06.b64 \
             flatpak/html-pairs/p07.b64 \
             flatpak/html-pairs/p08.b64 \
