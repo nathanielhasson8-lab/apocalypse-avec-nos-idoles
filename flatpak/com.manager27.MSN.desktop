@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Manager 27 (edition MSN)
+Comment=Football manager career simulator
+Exec=manager27
+Icon=com.manager27.MSN
+Terminal=false
+Categories=Game;SportsGame;
+StartupNotify=true
