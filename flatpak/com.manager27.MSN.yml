@@ -1,13 +1,15 @@
 app-id: com.manager27.MSN
 runtime: org.gnome.Platform
-runtime-version: '48'
+runtime-version: '50'
 sdk: org.gnome.Sdk
 command: manager27
 finish-args:
   - --share=network
+  - --share=ipc
   - --socket=wayland
   - --socket=fallback-x11
   - --device=dri
+  - --filesystem=xdg-download
 modules:
   - name: manager27
     buildsystem: meson
