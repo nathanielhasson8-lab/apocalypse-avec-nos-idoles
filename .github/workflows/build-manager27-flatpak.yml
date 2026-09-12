@@ -20,15 +20,32 @@ jobs:
 
       - name: Reconstruct and verify exact game HTML
         run: |
-          cat flatpak/html-pairs/p*.b64 | base64 -d | gzip -d > flatpak/index.html
+          cat \
+            flatpak/html-pairs/p00.b64 \
+            flatpak/html-pairs/p01.b64 \
+            flatpak/html-pairs/p02.b64 \
+            flatpak/html-pairs/p03.b64 \
+            flatpak/html-pairs/p04.b64 \
+            flatpak/html-pairs/p05a.b64 \
+            flatpak/html-pairs/p05b.b64 \
+            flatpak/html-pairs/p06.b64 \
+            flatpak/html-pairs/p07.b64 \
+            flatpak/html-pairs/p08.b64 \
+            flatpak/html-pairs/p09.b64 \
+            flatpak/html-pairs/p10.b64 \
+            flatpak/html-pairs/p11.b64 \
+            | base64 -d | gzip -d > flatpak/index.html
           echo "50e09582b828f7c69b3f0f074dd87f2aa02172590111e430140b99e2e93b3d22  flatpak/index.html" | sha256sum -c -
           test "$(wc -c < flatpak/index.html)" -eq 347438
           grep -q "Manager 27" flatpak/index.html
           grep -q "CONTINUER" flatpak/index.html
+          grep -q 'data-page="squad"' flatpak/index.html
+          grep -q 'data-page="tactics"' flatpak/index.html
+          grep -q 'data-page="calendar"' flatpak/index.html
 
       - name: Install GNOME runtime and SDK
         run: |
-          flatpak install --user -y flathub org.gnome.Platform//48 org.gnome.Sdk//48
+          flatpak install --user -y flathub org.gnome.Platform//50 org.gnome.Sdk//50
 
       - name: Build Flatpak
         run: |
