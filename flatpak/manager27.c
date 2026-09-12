@@ -10,7 +10,6 @@ static void activate(GtkApplication *app, gpointer user_data) {
     WebKitWebView *view = WEBKIT_WEB_VIEW(view_widget);
     WebKitSettings *settings = webkit_web_view_get_settings(view);
     webkit_settings_set_enable_javascript(settings, TRUE);
-    webkit_settings_set_enable_html5_local_storage(settings, TRUE);
     webkit_settings_set_enable_developer_extras(settings, FALSE);
 
     gchar *uri = g_filename_to_uri("/app/share/manager27/index.html", NULL, NULL);
