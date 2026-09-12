@@ -1,0 +1,25 @@
+app-id: com.manager27.MSN
+runtime: org.gnome.Platform
+runtime-version: '48'
+sdk: org.gnome.Sdk
+command: manager27
+finish-args:
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri
+modules:
+  - name: manager27
+    buildsystem: meson
+    sources:
+      - type: file
+        path: meson.build
+      - type: file
+        path: manager27.c
+      - type: file
+        path: index.html
+      - type: file
+        path: com.manager27.MSN.desktop
+      - type: file
+        path: com.manager27.MSN.svg
+      - type: file
+        path: com.manager27.MSN.metainfo.xml
