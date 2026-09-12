@@ -4,6 +4,7 @@ runtime-version: '48'
 sdk: org.gnome.Sdk
 command: manager27
 finish-args:
+  - --share=network
   - --socket=wayland
   - --socket=fallback-x11
   - --device=dri
