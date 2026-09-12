@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.manager27.MSN</id>
+  <name>Manager 27 (edition MSN)</name>
+  <summary>Football manager career simulator</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>LicenseRef-proprietary</project_license>
+  <description><p>Desktop Flatpak package for Manager 27 (edition MSN).</p></description>
+  <launchable type="desktop-id">com.manager27.MSN.desktop</launchable>
+</component>
